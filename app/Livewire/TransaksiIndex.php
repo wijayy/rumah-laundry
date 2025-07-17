@@ -6,21 +6,28 @@ use App\Models\Service;
 use App\Models\Transaksi;
 use Carbon\Carbon;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class TransaksiIndex extends Component
 {
-    public $date, $transaksi;
+    use WithPagination;
 
-    public function mount($date = null)
+    public $date, $nama, $status, $pembayaran, $optionStatus = ['diterima', 'diproses', 'selesai', 'diambil'];
+
+    protected $queryString = [
+        'nama' => ['except' => ''],
+        'date' => ['except' => ''],
+        'status' => ['except' => ''],
+        'pembayaran' => ['except' => ''],
+    ];
+    public function mount()
     {
-        $this->date = $date ?? date('Y-m-d');
-
-        $this->transaksi = Transaksi::whereDate('created_at', $this->date)->get();
+        $this->transaksi = Transaksi::filters(['date' => $this->date, 'nama'=>$this->nama, 'status' => "$this->status", 'pembayaran' => $this->pembayaran ]);
     }
 
-    public function updateDate()
+    public function updateTransaksi()
     {
-        return redirect(route('transaksi.index', ['date'=>$this->date]));
+        return redirect(route('transaksi.index', ['date' => $this->date, 'nama'=>$this->nama, 'status' => $this->status, 'pembayaran' => $this->pembayaran ]));
     }
     public function diproses($id)
     {
@@ -55,6 +62,8 @@ class TransaksiIndex extends Component
 
     public function render()
     {
-        return view('livewire.transaksi-index')->layout('components.layouts.app', ['title' => "Transaksi"]);
+        $transaksi = Transaksi::filters(['date' => $this->date, 'nama'=>$this->nama, 'status' => "$this->status", 'pembayaran' => $this->pembayaran ])->paginate(24);
+
+        return view('livewire.transaksi-index', compact('transaksi'))->layout('components.layouts.app', ['title' => "Transaksi"]);
     }
 }

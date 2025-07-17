@@ -9,10 +9,6 @@ use Livewire\Volt\Volt;
 Volt::route('/', 'home')->name('home');
 Volt::route('invoice/{slug}', 'invoice')->name('invoice');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -20,12 +16,12 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 
-
+    Volt::route('dashboard', 'dashboard')->name('dashboard');
     Volt::route('service', 'service-index')->name('service.index');
     Volt::route('service/add', 'service-create')->name('service.create');
     Volt::route('service/{slug}/edit', 'service-create')->name('service.edit');
     Volt::route('transaksi/add', 'transaksi-create')->name('transaksi.create');
-    Volt::route('/transaksi/{date?}', 'transaksi-index')->name('transaksi.index');
+    Volt::route('/transaksi', 'transaksi-index')->name('transaksi.index');
 });
 
 require __DIR__ . '/auth.php';

@@ -4,6 +4,7 @@
     'variant' => null,
     'faint' => false,
     'text' => null,
+    'position' => 'left',
 ])
 @php
     $orientation ??= $vertical ? 'vertical' : 'horizontal';
@@ -20,12 +21,23 @@
     ;
 @endphp
 <?php if ($text): ?>
-<div data-orientation="{{ $orientation }}" class="flex items-center mt-4 w-full" role="none" data-flux-sep
-   arator>
+<?php    if ($position == 'left'): ?>
+    <div data-orientation="{{ $orientation }}" class="flex items-center mt-4 w-full" role="none" data-flux-separator>
+
         <span class="shrink me-6 font-medium text-sm text-zinc-500 dark:text-zinc-300 whitespace-nowrap">{{ $text }}</span>
 
         <div {{ $attributes->class([$classes, 'grow']) }}></div>
     </div>
+    <?php    endif; ?>
+<?php    if ($position == 'center'): ?>
+    <div data-orientation="{{ $orientation }}" class="flex items-center mt-4 w-full" role="none" data-flux-separator>
+
+        <div {{ $attributes->class([$classes, 'grow']) }}></div>
+        <span class="shrink mx-6 font-medium text-sm text-zinc-500 dark:text-zinc-300 whitespace-nowrap">{{ $text }}</span>
+
+        <div {{ $attributes->class([$classes, 'grow']) }}></div>
+    </div>
+    <?php    endif; ?>
 <?php else: ?>
     <div data-orientation="{{ $orientation }}" role="none" {{ $attributes->class($classes, 'shrink-0') }} data-flux-separator></div>
 <?php endif; ?>

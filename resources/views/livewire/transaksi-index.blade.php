@@ -1,62 +1,68 @@
 <div>
-    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
-        <flux:input size="sm" type="date" class="w-fit!" wire:model='date' wire:change='updateDate'
-            max="{{ date('Y-m-d') }}"></flux:input>
-        <div class="text-xs">Summary</div>
-        <div class="w-full"></div>
-        <flux:button as href="{{ route('transaksi.create') }}" size="sm" variant="primary">Tambah Transaksi
+    <div class="flex gap-4">
+
+        <flux:button as href="{{ route('transaksi.create') }}" icon="plus" size="sm" variant="primary">Tambah Transaksi
+        </flux:button>
+        <flux:button as href="{{ route('transaksi.create') }}" icon="printer" size="sm" variant="primary">Cetak
         </flux:button>
     </div>
-    <div class="overflow-x-auto">
-        <div class="mt-4 grid grid-cols-16 items-center gap-2 py-2 min-w-5xl text-sm">
-            <div class="">#</div>
-            <div class="col-span-2">Nomor Transaksi</div>
-            <div class="col-span-2">Nama Customer</div>
-            <div class=" col-span-3">
-                <div class="text-center">Service</div>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="">Service</div>
-                    <div class="">Jumlah</div>
-                    <div class="">Subtotal</div>
+    <flux:separator text="Filter" position='center'></flux:separator>
+    <div class="grid grid-cols-2 w-full md:grid-cols-4 gap-2">
+        <flux:input size="sm" type="date" :label="'Tanggal Masuk'" wire:model='date' wire:change='updateTransaksi'
+            max="{{ date('Y-m-d') }}"></flux:input>
+        <flux:input size="sm" :label="'Nama Customer'" wire:model='nama' wire:change='updateTransaksi'></flux:input>
+        <flux:select wire:change='updateTransaksi' wire:model='status' :label="'Status'">
+            <flux:select.option value="">semua</flux:select.option>
+            @foreach ($optionStatus as $item)
+                <flux:select.option value="{{ $item }}">{{ $item }}</flux:select.option>
+            @endforeach
+        </flux:select>
+        <flux:select wire:change='updateTransaksi' wire:model='pembayaran' :label="'Pembayaran'">
+            <flux:select.option value="">semua</flux:select.option>
+            <flux:select.option value="0">belum bayar</flux:select.option>
+            <flux:select.option value="1">sudah bayar</flux:select.option>
+        </flux:select>
+    </div>
+    <flux:separator text="Data Transaksi" position="center"></flux:separator>
+    <div class="grid gap-4 grid-cols-1 mt-4 md:grid-cols-2  lg:grid-cols-3">
+        @foreach ($transaksi as $item)
+            <div class="rounded shadow-sm text-xs p-2 sm:text-sm bg-neutral-100 dark:bg-neutral-600 lg:text-base">
+                <div class="flex justify-between text-mine-300">
+                    <div class="">{{ $item->created_at->format('d-m-Y') }}</div>
+                    <div class="">{{ $item->created_at->format('H:i') }}</div>
                 </div>
-            </div>
-            <div class="col-span-2 text-center">Total</div>
-            <div class="col-span-1 text-center">Status</div>
-            <div class="col-span-2 text-center">Estimasi Selesai</div>
-            <div class="col-span-2 text-center">Pengambilan</div>
-            <div class="col-span-1 text-center">Action</div>
-        </div>
-        @foreach ($transaksi as $key => $item)
-            <div class="mt-4 grid grid-cols-16 items-center gap-2 py-2 min-w-5xl text-sm">
-                <div class="">{{ $key + 1 }}</div>
-                <div class="col-span-2">{{ $item->nomor_transaksi }}</div>
-                <div class="col-span-2">{{ $item->nama }}</div>
-                <div class=" col-span-3">
-                    @foreach ($item->items as $itm)
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="">{{ $itm->service->nama }}</div>
-                            <div class="">{{ $itm->jumlah }} {{ $itm->service->satuan }}</div>
-                            <div class="">Rp. {{ number_format($itm->subtotal, 0, ',', '.')  }}</div>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="col-span-2 text-center">Rp. {{ number_format($item->total, 0, ',', '.')  }}</div>
-                <div class="col-span-1 text-center space-y-1">
+                <div class="text-sm lg:text-lg mt-2">{{ $item->nomor_transaksi }}</div>
+                <div class="">{{ $item->nama }}</div>
+                <div class="">Estimasi Selesai : {{ $item->selesai->format('d-m-Y') }}</div>
+                <div class="">Pengambilan : {{ $item->diambil?->format('d-m-Y H:i') ?? '-' }}</div>
+
+                <div class="flex justify-center mt-2 gap-4">
                     @if ($item->status == 'diterima')
-                        <div class="p-1 rounded bg-amber-100">{{ $item->status }}</div>
+                        <div class="p-1 rounded capitalize bg-amber-100 dark:bg-amber-900">{{ $item->status }}</div>
                     @elseif ($item->status == 'diproses')
-                        <div class="p-1 rounded bg-lime-100">{{ $item->status }}</div>
+                        <div class="p-1 rounded capitalize bg-lime-100 dark:bg-lime-900">{{ $item->status }}</div>
                     @elseif ($item->status == 'selesai')
-                        <div class="p-1 rounded bg-emerald-100">{{ $item->status }}</div>
+                        <div class="p-1 rounded capitalize bg-emerald-100 dark:bg-emerald-900">{{ $item->status }}</div>
                     @elseif ($item->status == 'diambil')
-                        <div class="p-1 rounded bg-sky-100">{{ $item->status }}</div>
+                        <div class="p-1 rounded capitalize bg-sky-100 dark:bg-sky-900">{{ $item->status }}</div>
                     @endif
-                    <div class="p-1 rounded {{ $item->pembayaran ? 'bg-green-100' : 'bg-rose-100' }}">
-                        {{ $item->pembayaran ? "Sudah Bayar" : "Belum Bayar" }}</div>
+                    <div class="p-1 rounded capitalize {{ $item->pembayaran ? 'bg-green-100 dark:bg-green-900' : 'bg-rose-100 dark:bg-rose-900' }}">
+                        {{ $item->pembayaran ? "Sudah Bayar" : "Belum Bayar" }}
+                    </div>
                 </div>
-                <div class="col-span-2 text-center">{{ $item->selesai->format("d M Y") }}</div>
-                <div class="col-span-2 text-center">{{ $item->diambil?->format('d M Y H:i') ?? '-' }}</div>
-                <div class="col-span-1 text-center">
+                <flux:separator text="Service" position="center"></flux:separator>
+                @foreach ($item->items as $itm)
+                    <div class="grid grid-cols-3 gap-2 w-full">
+                        <div class="text-center">{{ $itm->service->nama }}</div>
+                        <div class="text-center">{{ $itm->jumlah }} {{ $itm->service->satuan }}</div>
+                        <div class="text-center">Rp. {{ number_format($itm->subtotal, 0, ',', '.')  }}</div>
+                    </div>
+                @endforeach
+                <flux:separator text="Total" position="center"></flux:separator>
+                <div class="text-center">Rp. {{ number_format($item->total, 0, ',', '.')  }}</div>
+
+                <flux:separator text="Action" position="center"></flux:separator>
+                <div class="flex gap-4 mt-4 justify-center">
                     @if ($item->status == 'diterima')
                         <flux:modal.trigger name="diproses-{{$item->id }}">
                             <flux:tooltip content="Proses Order">
@@ -119,10 +125,13 @@
                         </flux:modal>
                     @endif
                     <flux:tooltip content="Invoice">
-                        <flux:button size="sm" icon="invoice" as href="{{ route('invoice', ['slug'=>$item->slug]) }}"></flux:button>
+                        <flux:button size="sm" icon="invoice" as href="{{ route('invoice', ['slug' => $item->slug]) }}">
+                        </flux:button>
                     </flux:tooltip>
                 </div>
             </div>
         @endforeach
     </div>
+
+    <div class="">{{ $transaksi->links() }}</div>
 </div>

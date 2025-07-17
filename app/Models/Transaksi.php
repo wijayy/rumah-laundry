@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Transaksi extends Model
 {
@@ -58,5 +59,24 @@ class Transaksi extends Model
             'selesai' => 'datetime',
             'diambil' => 'datetime',
         ];
+    }
+
+    public function scopeFilters(Builder $query, array $filters)
+    {
+        $query->when($filters["nama"] ?? false, function ($query, $search) {
+            return $query->where("nama", 'like', "%$search%");
+        });
+
+        $query->when($filters["date"] ?? false, function ($query, $search) {
+            return $query->whereDate("created_at", $search);
+        });
+
+        $query->when(isset($filters['pembayaran']) && $filters['pembayaran'] != '', function ($query) use ($filters) {
+            return $query->where('pembayaran', $filters['pembayaran']);
+        });
+
+        $query->when(isset($filters['status']) && $filters['status'] != '',     function ($query) use ($filters) {
+        return $query->where('status', $filters['status']);
+    });
     }
 }
