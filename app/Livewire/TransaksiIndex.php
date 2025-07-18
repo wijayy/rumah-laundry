@@ -20,11 +20,7 @@ class TransaksiIndex extends Component
         'status' => ['except' => ''],
         'pembayaran' => ['except' => ''],
     ];
-    public function mount()
-    {
-        $this->transaksi = Transaksi::filters(['date' => $this->date, 'nama'=>$this->nama, 'status' => "$this->status", 'pembayaran' => $this->pembayaran ]);
-    }
-
+    
     public function updateTransaksi()
     {
         return redirect(route('transaksi.index', ['date' => $this->date, 'nama'=>$this->nama, 'status' => $this->status, 'pembayaran' => $this->pembayaran ]));
@@ -36,7 +32,7 @@ class TransaksiIndex extends Component
         $transaksi->status = 'diproses';
         $transaksi->save();
 
-        $this->updateDate();
+        $this->updateTransaksi();
 
     }
     public function selesai($id)
@@ -46,7 +42,7 @@ class TransaksiIndex extends Component
         $transaksi->status = 'selesai';
         $transaksi->save();
 
-        $this->updateDate();
+        $this->updateTransaksi();
     }
     public function diambil($id)
     {
@@ -57,7 +53,7 @@ class TransaksiIndex extends Component
         $transaksi->diambil = Carbon::now();
         $transaksi->save();
 
-        $this->updateDate();
+        $this->updateTransaksi();
     }
 
     public function render()
