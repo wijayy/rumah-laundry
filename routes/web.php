@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\ServiceIndex;
+use App\Livewire\Whatsapp;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -8,6 +9,9 @@ use Livewire\Volt\Volt;
 
 Volt::route('/', 'home')->name('home');
 Volt::route('invoice/{slug}', 'invoice')->name('invoice');
+Volt::route('cetak-invoice/{slug}', 'cetak-invoice')->name('cetak-invoice');
+
+Route::get('whatsapp/{slug}', Whatsapp::class)->name('whatsapp');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

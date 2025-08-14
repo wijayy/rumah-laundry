@@ -1,7 +1,7 @@
 <div class="">
     <form wire:submit='save'>
         <div class="font-semibold text-sm mb-4">Cek status cucianmu dengan memasukkan nomor transaksi di sini!</div>
-        <flux:input wire:model='nomor_transaksi' required :label="'Masukan Nomor Transaksi'"></flux:input>
+        <flux:input wire:model.live='nomor_transaksi' required :label="'Masukan Nomor Transaksi'"></flux:input>
         <x-action-message on="error" class="text-sm mt-2 text-rose-400">
             Nomor Transaksi tidak Ditemukan
         </x-action-message>

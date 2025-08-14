@@ -27,13 +27,24 @@
         @foreach ($transaksi->items as $item)
             <div class="">{{ $item->service->nama }}</div>
             <div class="">{{ $item->jumlah }} {{ $item->service->satuan }}</div>
-            <div class="">Rp. {{ number_format($item->subtotal,0, ',', '.')  }}</div>
+            <div class="">Rp. {{ number_format($item->subtotal, 0, ',', '.')  }}</div>
         @endforeach
     </div>
 
     <flux:separator text="Total"></flux:separator>
     <div class="grid grid-cols-3">
         <div class="col-span-2">Total</div>
-        <div class="">Rp. {{ number_format($transaksi->total,0, ',', '.')  }}</div>
+        <div class="">Rp. {{ number_format($transaksi->total, 0, ',', '.')  }}</div>
     </div>
+
+    @auth()
+    <div class="flex mt-4 justify-center">
+        <flux:tooltip content="Cetak Invoice">
+            <flux:button size="sm" icon="printer" as href="{{ route('cetak-invoice', ['slug' => $transaksi->slug]) }}">
+            </flux:button>
+        </flux:tooltip>
+    </div>
+    @endauth
+
+
 </div>

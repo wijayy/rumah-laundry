@@ -96,7 +96,7 @@ return [
     |---------------------------------------------------------------------------
     |
     | Previous versions of Livewire supported binding directly to eloquent model
-    | properties using wire:model by default. However, this behavior has been
+    | properties using wire:model.live by default. However, this behavior has been
     | deemed too "magical" and has therefore been put under a feature flag.
     |
     */

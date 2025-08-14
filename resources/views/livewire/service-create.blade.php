@@ -1,11 +1,11 @@
 <div>
     <form wire:submit='save' class="space-y-4">
-        <flux:input wire:model='nama' :label="'Nama Service'"></flux:input>
+        <flux:input wire:model.live='nama' :label="'Nama Service'"></flux:input>
         <div class="grid grid-cols-4">
             <div class="col-span-3">
-                <flux:input wire:model='harga' type="number" step="500" :label="'Harga'"></flux:input>
+                <flux:input wire:model.live='harga' type="number" step="500" :label="'Harga'"></flux:input>
             </div>
-            <flux:select wire:model='satuan' :label="'Satuan'" :placeholder="'Pilih Satuan'">
+            <flux:select wire:model.live='satuan' :label="'Satuan'" :placeholder="'Pilih Satuan'">
                 @foreach ($stn as $item)
                     <flux:select.option value="{{ $item }}">{{ $item }}</flux:select.option>
                 @endforeach

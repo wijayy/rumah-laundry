@@ -16,6 +16,9 @@ class TransaksiCreate extends Component
     #[Validate('required|string')]
     public $nama = '';
 
+    #[Validate('required|starts_with:62')]
+    public $whatsapp = '';
+
     #[Validate('required|array|min:1')]
     public $services = [];
 
@@ -84,6 +87,7 @@ class TransaksiCreate extends Component
                 'nama' => $this->nama,
                 'selesai' => $this->selesai,
                 'total' => $this->total,
+                'whatsapp' => $this->whatsapp,
                 'pembayaran' => $this->payment,
                 'status' => 'diterima'
             ]);

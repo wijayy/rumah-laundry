@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('nama');
             $table->string('nomor_transaksi');
+            $table->string('whatsapp');
             $table->string('slug')->unique();
             $table->enum('status', ['diterima', 'diproses', 'selesai', 'diambil']);
             $table->boolean('pembayaran');
