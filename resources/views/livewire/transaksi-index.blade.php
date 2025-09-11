@@ -32,7 +32,7 @@
                     <div class="">{{ $item->created_at->format('H:i') }}</div>
                 </div>
                 <div class="text-sm lg:text-lg mt-2">{{ $item->nomor_transaksi }}</div>
-                <div class="">{{ $item->nama }} / 628XXXXXXXXXX</div>
+                <div class="">{{ $item->nama }} / {{ $item->whatsapp }}</div>
                 <div class="">Estimasi Selesai : {{ $item->selesai->format('d-m-Y') }}</div>
                 <div class="">Pengambilan : {{ $item->diambil?->format('d-m-Y H:i') ?? '-' }}</div>
 

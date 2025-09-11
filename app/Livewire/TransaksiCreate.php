@@ -76,44 +76,44 @@ class TransaksiCreate extends Component
         }
     }
 
-    public function save()
-    {
-        $this->validate();
+public function save()
+{
+    $this->validate();
 
-        try {
-            DB::beginTransaction();
-            $transaksi = Transaksi::create([
-                'nomor_transaksi' => Transaksi::generateNomorTransaksi(),
-                'nama' => $this->nama,
-                'selesai' => $this->selesai,
-                'total' => $this->total,
-                'whatsapp' => $this->whatsapp,
-                'pembayaran' => $this->payment,
-                'status' => 'diterima'
+    try {
+        DB::beginTransaction();
+        $transaksi = Transaksi::create([
+            'nomor_transaksi' => Transaksi::generateNomorTransaksi(),
+            'nama' => $this->nama,
+            'selesai' => $this->selesai,
+            'total' => $this->total,
+            'whatsapp' => $this->whatsapp,
+            'pembayaran' => $this->payment,
+            'status' => 'diterima'
+        ]);
+
+        foreach ($this->services as $key => $item) {
+            $service = Service::findOrFail($item['id']);
+            TransaksiDetail::create([
+                'transaksi_id' => $transaksi->id,
+                'service_id' => $item['id'],
+                'jumlah' => $item['jumlah'],
+                'harga' => $service->harga,
+                'subtotal' => $service->harga * $item['jumlah'],
             ]);
+        }
+        DB::commit();
 
-            foreach ($this->services as $key => $item) {
-                $service = Service::findOrFail($item['id']);
-                TransaksiDetail::create([
-                    'transaksi_id' => $transaksi->id,
-                    'service_id' => $item['id'],
-                    'jumlah' => $item['jumlah'],
-                    'harga' => $service->harga,
-                    'subtotal' => $service->harga * $item['jumlah'],
-                ]);
-            }
-            DB::commit();
-
-            return redirect(route('transaksi.index'))->with('success', "Data Berhasil Ditambahkan");
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                return back()->with('error', $th->getMessage());
-            }
+        return redirect(route('transaksi.index'))->with('success', "Data Berhasil Ditambahkan");
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        if (config('app.debug') == true) {
+            throw $th;
+        } else {
+            return back()->with('error', $th->getMessage());
         }
     }
+}
 
     public function render()
     {

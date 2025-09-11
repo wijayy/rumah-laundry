@@ -20,48 +20,46 @@ class ServiceCreate extends Component
     #[Validate('required')]
     public $satuan = '';
 
-    public function mount($slug = null)
-    {
-        if ($slug ?? false) {
-            $this->service = Service::where('slug', $slug)->firstOrFail();
+public function mount($slug = null)
+{
+    if ($slug ?? false) {
+        $this->service = Service::where('slug', $slug)->firstOrFail();
 
-            $this->nama = $this->service->nama;
-            $this->harga = $this->service->harga;
-            $this->satuan = $this->service->satuan;
+        $this->nama = $this->service->nama;
+        $this->harga = $this->service->harga;
+        $this->satuan = $this->service->satuan;
 
-            $this->title = "Edit $this->nama";
+        $this->title = "Edit $this->nama";
+    } else {
+        $this->title = "Tambah Service Baru";
+    }
+}
+
+public function save()
+{
+    $validated = $this->validate();
+    try {
+        DB::beginTransaction();
+        Service::updateOrCreate(
+            ['id' => $this->service?->id],
+            [
+                'nama' => $this->nama,
+                'harga' => $this->harga,
+                'satuan' => $this->satuan,
+            ]
+        );
+        DB::commit();
+        session()->flash('success', $this->service ? 'Data berhasil diubah' : 'Data berhasil ditambahkan');
+        return redirect()->route('service.index');
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        if (config('app.debug') == true) {
+            throw $th;
         } else {
-            $this->title = "Tambah Service Baru";
+            return back()->with('error', $th->getMessage());
         }
     }
-
-    public function save()
-    {
-        $validated = $this->validate();
-        try {
-            DB::beginTransaction();
-            Service::updateOrCreate(
-                ['id' => $this->service?->id],
-                [
-                    'nama' => $this->nama,
-                    'harga' => $this->harga,
-                    'satuan' => $this->satuan,
-                ]
-            );
-            DB::commit();
-            session()->flash('success', $this->service ? 'Data berhasil diubah' : 'Data berhasil ditambahkan');
-            return redirect()->route('service.index');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                return back()->with('error', $th->getMessage());
-            }
-        }
-
-
-    }
+}
 
     public function render()
     {

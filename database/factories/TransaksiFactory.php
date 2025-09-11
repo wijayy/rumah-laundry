@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Transaksi;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,12 @@ class TransaksiFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nama' => fake()->name(),
+            'nomor_transaksi' => Transaksi::generateNomorTransaksi(),
+            'whatsapp' => fake()->phoneNumber(),
+            'status' => fake()->randomElement(['diterima', 'diproses', 'selesai', 'diambil']),
+            'pembayaran' => mt_rand(0, 1),
+            'total' => 0,
         ];
     }
 }

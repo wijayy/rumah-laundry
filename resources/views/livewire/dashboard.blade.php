@@ -35,8 +35,8 @@
     <canvas id="grafikTotal" class="aspect-square max-h-72 lg:max-h-96 mt-4"></canvas>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- SUM(jumlah) Pie -->
-        <div>
-            <canvas id="sumPieChart" height="400"></canvas>
+        <div class="">
+            <canvas  id="sumPieChart" height="400"></canvas>
         </div>
 
         <!-- COUNT(service_id) Pie -->

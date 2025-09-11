@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Service;
+use App\Models\Transaksi;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,8 @@ class TransaksiDetailFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'transaksi_id' => Transaksi::factory(),
+            'service_id' => Service::factory(),
         ];
     }
 }
